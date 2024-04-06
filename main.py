@@ -2,7 +2,7 @@ import mysql.connector
 
  
 
-connection = mysql.connector.connect(user = 'user', database ='BankSystem', password = 'Katyisd#1')
+connection = mysql.connector.connect(user = 'root', database ='bank', password = 'Katyisd#1')
 
  
 
