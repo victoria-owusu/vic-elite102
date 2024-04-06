@@ -1,20 +1,28 @@
-import mysql.connector
+#import mysql.connector
 
  
 
-connection = mysql.connector.connect(user = 'root', database ='bank', password = 'Katyisd#1')
+#connection = mysql.connector.connect(user = 'root', database ='bank', password = 'Katyisd#1')
 
  
 
-connection.close()
+#connection.close()
 
 # welcome user
 print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number to get started.")
 print("")
 
 #user login
-account_number = input("Please enter your account number: ")
-PIN_number = input("Please enter your PIN number: ")
+account_number = input("Please enter your 10-digit account number: ")
+
+# validate account number digits
+while len(account_number) != 10:
+    account_number = input("Invalid, try again. Please enter your 10-digit account number: ")
+
+
+PIN_number = input("Please enter your 4-digit PIN number: ")
+while len(PIN_number) != 4:
+    PIN_number = input("Invalid, try again. Please enter your 4-digit PIN number: ")
 
 #options
 print("Login Successful!")
