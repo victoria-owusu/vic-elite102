@@ -2,9 +2,11 @@
 print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number.")
 print("")
 
+#user login
 account_number = input("Please enter your account number: ")
 PIN_number = input("Please enter your PIN number: ")
 
+#options
 print("Login Successful!")
 print("")
 print("")
@@ -36,7 +38,7 @@ elif (action_option == 4):
     print("3. Modify an account")
     print("4. Exit SwiftBank")
     admin_option = int(input("Please enter an option from 1-3: "))
-
+#edit account
     if (admin_option == 1):
         print("Account created.")
     
