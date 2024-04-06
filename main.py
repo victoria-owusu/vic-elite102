@@ -2,11 +2,11 @@ import mysql.connector
 
  
 
-# connection = mysql.connector.connect(user = ‘username’, database = ‘database_name’, password = ‘password’)
+connection = mysql.connector.connect(user = ‘root’, database = ‘BankSystem’, password = ‘Katyisd#1’)
 
  
 
-# connection.close()
+connection.close()
 
 # welcome user
 print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number to get started.")
