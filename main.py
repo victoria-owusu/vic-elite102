@@ -9,7 +9,7 @@ import mysql.connector
 # connection.close()
 
 # welcome user
-print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number.")
+print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number to get started.")
 print("")
 
 #user login
@@ -25,7 +25,7 @@ print("Welcome to SwiftBank! Please select from the action options below:")
 print("1. Check Balance")
 print("2. Add a Deposit")
 print("3. Do a Withdraw")
-print("4. I am a new user or a bank administrator.")
+print("4. Account Settings")
 print("5. Exit SwiftBank")
 
 action_option = int(input("Please enter an option from 1-4: "))
@@ -42,7 +42,7 @@ elif (action_option == 3):
 elif (action_option == 4):
     print("")
     print("************")
-    print("New users and bank adminstrators, choose one of the following options: ")
+    print("Account settings: choose one of the following options: ")
     print("1. Create a new account")
     print("2. Close account")
     print("3. Modify an account")
