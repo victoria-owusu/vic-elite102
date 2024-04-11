@@ -39,8 +39,30 @@ def display_options():
     print("3. Do a Withdraw")
     print("4. Account Settings")
     print("5. Exit SwiftBank")
+    print("")
 
 display_options()
+
+# add deposit function
+def make_deposit(amount, method):
+    if (deposit_method == 1):
+        print("Bank Transfer: ")
+        confirm_account = input("Please confirm your account number to deposit funds: ")
+        routing_number = input("Please confirm the routing number of the bank of the transfer:  ")
+        transfer_description = input("Please enter any additional notes for the transfer: ")
+        print(f"Deposit complete! You have deposited ${deposit_amount} through bank transfer!")
+        # display_options()
+        # TO-DO: add function to display transactions
+    elif (deposit_method == 2):
+        print("Wire Transfer: ")
+        confirm_account = input("Please confirm your account number to deposit funds: ")
+        bank_name = input("Please enter your bank's name: ")
+        routing_number = input("Enter your bank's routing number: ")
+        print("")
+        print(f"Deposit complete! You have deposited ${deposit_amount} through wire transfer!")
+
+
+
 action_option = int(input("Please enter an option from 1-4: "))
 
 #Check balance, print tables
@@ -53,19 +75,14 @@ elif (action_option == 2):
     deposit_amount = int(input("How much do you want to deposit? "))
     print("1. Bank Transfer")
     print("2. Wire Transfer")
-    print("Please choose an option from 1-2: ")
+    print("")
+    print("Please choose an option from 1-2 ")
     deposit_method = int(input("Please choose a deposit method: "))
-    if (deposit_method == 1):
-        print("Bank Transfer: ")
-        confirm_account = input("Please confirm your account number to deposit funds: ")
-        routing_number = input("Please confirm the routing number of the bank of the transfer:  ")
-        transfer_description = input("Please enter any additional notes for the transfer: ")
-        print(f"Deposit complete! You have deposited ${deposit_method} through bank transfer!")
-        # display_options()
-        # TO-DO: add function to display transactions
-    elif (deposit_method == 2):
-        print("Wire Transfer: ")
-        confirm_account = input("Please confirm your account number to deposit funds: ")
+    make_deposit(deposit_amount, deposit_method)
+   
+    
+   
+   
 
 elif (action_option == 3):
     print("Do a withdraw")
