@@ -61,7 +61,36 @@ def make_deposit(amount, method):
         print("")
         print(f"Deposit complete! You have deposited ${deposit_amount} through wire transfer!")
 
-
+#make withdrawal function
+def make_withdrawal(amount, method):
+     
+      #credit or debit card
+      if (withdrawal_method == 1):
+        debit_or_credit = input("Please enter type of card (debit or credit): ")
+        card_number = int(input("Please enter card number: "))
+        cardholder_name = input("Please enter the full name of the cardholder: ")
+        expiration_date = input("Please enter the expiration date")
+        cvc = input("Please enter the CVV/CVC: ")
+        print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through ${debit_or_credit} card!")
+       
+        #bank transfer
+      elif (withdrawal_method == 2): 
+        bank_name = input("Please enter the name of the bank: ")
+        recipient_holder_name = input("Please enter the account recipient's full name: ")
+        recipient_account_number = input("Please enter the recipient's account number: ")
+        recipient_routing_number = input("Please enter the recipient's routing number: ")
+        transfer_reference = input("Please enter any additional info for the transfer: ")
+        print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through bank transfer to ${recipient_holder_name}!")
+        
+        #mobile wallet
+      elif (withdrawal_method == 3):
+        mobile_wallet_provider = input("Please enter the mobile wallet provider you'll be using: ")
+        user_id = input("Please enter your user id: ")
+        phone_number = input("Please enter your phone number (XXX-XXX-XXXX): ")
+        mobile_wallet_password = input("Please enter your password used for mobile wallet: ")
+        mobile_wallet_note = input("Please enter any additional notes for this withdrawal: ")
+        print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through your mobile wallet!")
+          
 
 action_option = int(input("Please enter an option from 1-4: "))
 
@@ -82,25 +111,18 @@ elif (action_option == 2):
    
     
    
-   
 
 elif (action_option == 3):
     print("Do a withdraw")
-    withdrawal_method = int(input("Please choose a withdrawal method: "))
+    print("")
+    withdrawal_amount = int(input("Please enter the amount you would like to withdrawal: "))
     print("1. Credit/Debit Card")
     print("2. Bank Transfer")
     print("3. Mobile Wallets (Apple Pay, Google Pay, Samsung Pay)")
-    print("Please choose an option from 1-3: ")
-    if (withdrawal_method == 1):
-        debit_or_credit = input("Please enter type of card (debit or credit): ")
-        card_number = int(input("Please enter card number: "))
-        cardholder_name = input("Please enter the full name of the cardholder: ")
-        expiration_date = input("Please enter the expiration date")
-        cvc = input("Please enter the CVV/CVC: ")
-    elif (withdrawal_method == 2): 
-        bank_name = input("Please enter the name of the bank: ")
-        recipient_holder_name = input("Please enter the account recipient's full name: ")
-        recipient_account_number = input("Please enter the recipient's account number: ")
+    withdrawal_method = int(input("Please choose a withdrawal method from 1-3: "))
+    make_withdrawal(withdrawal_amount, withdrawal_method)
+    
+ 
 
 elif (action_option == 4):
     print("")
