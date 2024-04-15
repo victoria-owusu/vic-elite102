@@ -90,7 +90,14 @@ def make_withdrawal(amount, method):
         mobile_wallet_password = input("Please enter your password used for mobile wallet: ")
         mobile_wallet_note = input("Please enter any additional notes for this withdrawal: ")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through your mobile wallet!")
-          
+
+#create user account         
+def create_account():
+    new_user = input("Please enter new username: ")
+    new_pass = input("Please enter new password: ")
+    confirm_pass = input("Please confirm password = ")
+    while new_pass != confirm_pass:
+        confirm_pass = input("Incorrect, please use the correct password: ")
 
 action_option = int(input("Please enter an option from 1-4: "))
 
@@ -122,7 +129,7 @@ elif (action_option == 3):
     withdrawal_method = int(input("Please choose a withdrawal method from 1-3: "))
     make_withdrawal(withdrawal_amount, withdrawal_method)
     
- 
+
 
 elif (action_option == 4):
     print("")
