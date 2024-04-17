@@ -26,6 +26,9 @@ PIN_number = input("Please enter your 4-digit PIN number: ")
 while len(PIN_number) != 4:
     PIN_number = input("Invalid, try again. Please enter your 4-digit PIN number: ")
 
+#create account list
+account_list = ["default"]
+
 #options
 print("Login Successful!")
 print("")
@@ -91,13 +94,17 @@ def make_withdrawal(amount, method):
         mobile_wallet_note = input("Please enter any additional notes for this withdrawal: ")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through your mobile wallet!")
 
-def create_account():
-    new_user = input("Please enter new username: ")
-    new_pass = input("Please enter new password: ")
-    confirm_pass = input("Please confirm password: ")
-    while new_pass != confirm_pass:
-        confirm_pass = input("Incorrect, please use the correct password: ")
+def create_account(user, password, email):
+    # everytime account is created
+    create_user = user
+    create_password = password
+    create_email = email
+    account_list.append(create_user)
+    print(f"Welcome {create_user}, your account has been created!")
           
+def delete_account():
+   if len(account_list) == 1 and account_list[0] == 'default':
+       print("You cannot delete the **default** account. Only additionally made accounts can be deleted.")
 
 action_option = int(input("Please enter an option from 1-4: "))
 
@@ -118,7 +125,7 @@ elif (action_option == 2):
    
     
    
-
+#make a withdrawal
 elif (action_option == 3):
     print("Do a withdraw")
     print("")
@@ -130,7 +137,7 @@ elif (action_option == 3):
     make_withdrawal(withdrawal_amount, withdrawal_method)
     
 
-
+# account settings
 elif (action_option == 4):
     print("")
     print("************")
@@ -140,12 +147,23 @@ elif (action_option == 4):
     print("3. Modify an account")
     print("4. Exit SwiftBank")
     admin_option = int(input("Please enter an option from 1-3: "))
+
 #edit account
     if (admin_option == 1):
-        print("Account created.")
+        new_user = input("Please enter new username: ")  
+        new_pass = input("Please enter new password: ")
+        confirm_pass = input("Please confirm password: ")
+        while new_pass != confirm_pass:
+            confirm_pass = input("Incorrect, please use the correct password: ")
+        email_address = input("Please enter your email address: ")
+        confirm_email = input("Please confirm your email address: ")
+        while email_address != confirm_email:
+            confirm_email = input("Incorrect, please use the correct email address: ")
+        create_account(new_user, new_pass, email_address)
+        print(f"Current Accounts: {account_list}")
     
     elif (admin_option == 2):
-        print("Account closed.")
+        print("Notice: You are not allowed to delete your default account, which only account number and PIN were only required.")
 
     elif (admin_option == 3):
         print("Account modified.")
