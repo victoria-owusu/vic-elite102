@@ -163,7 +163,8 @@ elif (action_option == 4):
         print(f"Current Accounts: {account_list}")
     
     elif (admin_option == 2):
-        print("Notice: You are not allowed to delete your default account, which only account number and PIN were only required.")
+        print("Notice: You are not allowed to delete your default account, which only account number and PIN are only required.")
+        delete_account()
 
     elif (admin_option == 3):
         print("Account modified.")
