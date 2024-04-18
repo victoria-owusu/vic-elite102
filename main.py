@@ -107,6 +107,22 @@ def delete_account():
    if len(account_list) == 1 and account_list[0] == 'default':
        print("You cannot delete the **default** account. Only additionally made accounts can be deleted.")
 
+def change_email(username, new_email):
+  #for loop is used to find dictionar ycorresponding to specified username
+  for account in account_list:
+        if account["username"] == username:
+            account["email"] = new_email
+            print(f"Email address has been updated successfully to {new_email}")
+            break
+  else:
+        print("Username not found.")
+
+def change_password():
+    print("password changed")
+
+def change_user():
+    print("username changed")
+
 action_option = int(input("Please enter an option from 1-4: "))
 
 #Check balance, print tables
@@ -180,6 +196,7 @@ elif (action_option == 4):
                     return username_exists
                     break
         verify_account_existence(account_to_modify)
+        # continuously ask the user to keep submitting until a valid response is inputted
         if verify_account_existence(account_to_modify):
             print("1. Change email")
             print("2. Change password")
@@ -189,10 +206,25 @@ elif (action_option == 4):
             while not verify_account_existence(account_to_modify):
                 account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
                 verify_account_existence(account_to_modify)
+            print("1. Change email")
+            print("2. Change password")
+            print("3. Change username")
+        
+        #allow user to choose waht they would like to change
+        modify_option = int(input("Please choose from 1-3: "))
+        if (modify_option == 1):
+            new_email = input("Please enter your changed email address: ")
+            change_email(account_to_modify, new_email)
+        
+        elif (modify_option == 2):
+            change_password()
+
+        elif(modify_option == 3):
+            change_user()
+
 
         
         
-
         
 
     elif (admin_option == 4):
