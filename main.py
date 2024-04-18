@@ -27,8 +27,10 @@ while len(PIN_number) != 4:
     PIN_number = input("Invalid, try again. Please enter your 4-digit PIN number: ")
 
 #create account list
-account_list = ["default"]
-
+#created dictionary with each representing an ccount iwht three key-value pairs
+account_list = [
+{"username": "default", "password": "default", "email": "default@gmail.com" }
+]
 #options
 print("Login Successful!")
 print("")
@@ -96,11 +98,10 @@ def make_withdrawal(amount, method):
 
 def create_account(user, password, email):
     # everytime account is created
-    create_user = user
-    create_password = password
-    create_email = email
-    account_list.append(create_user)
-    print(f"Welcome {create_user}, your account has been created!")
+    new_account = {"username": user, "email": email, "password": password}
+    account_list.append(new_account)
+    print(f"Welcome {user}, your account has been created!")
+
           
 def delete_account():
    if len(account_list) == 1 and account_list[0] == 'default':
@@ -165,9 +166,34 @@ elif (action_option == 4):
     elif (admin_option == 2):
         print("Notice: You are not allowed to delete your default account, which only account number and PIN are only required.")
         delete_account()
-
+   
+    #modify account information
     elif (admin_option == 3):
-        print("Account modified.")
+        print(f"Current Accounts: {account_list}")
+        account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
+         # Check if the entered username exists in any of the dictionaries in account_list
+        def verify_account_existence(account):
+            username_exists = False
+            for account in account_list:
+                if account['username'] == account_to_modify:
+                    username_exists = True
+                    return username_exists
+                    break
+        verify_account_existence(account_to_modify)
+        if verify_account_existence(account_to_modify):
+            print("1. Change email")
+            print("2. Change password")
+            print("3. Change username")
+        else:
+            print("Invalid account, try again.")
+            while not verify_account_existence(account_to_modify):
+                account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
+                verify_account_existence(account_to_modify)
+
+        
+        
+
+        
 
     elif (admin_option == 4):
         print("Thank you for using SwiftBank!")
