@@ -103,9 +103,27 @@ def create_account(user, password, email):
     print(f"Welcome {user}, your account has been created!")
 
           
-def delete_account():
+def delete_account(account, acc_number, pin):
    if len(account_list) == 1 and account_list[0] == 'default':
        print("You cannot delete the **default** account. Only additionally made accounts can be deleted.")
+       return
+   acccount =  input("What account do you want to delete besides default? ")
+   for account in account_list:
+        if account["username"] == account:
+            print(f"Starting process to delete ${account}.")
+   acc_number = account_number
+   pin = PIN_number
+   confirm_acc_number = input("Please confirm your account number: ")
+   while confirm_acc_number != account_number:
+       confirm_acc_number = input("Please try again, incorrect account number: ")
+   confirm_pin = input("Please confirm your pin number: ")
+   while confirm_pin != PIN_number:
+       confirm_pin = input("Please try again, incorrect account number: ")
+   print("Deleting account....")
+   account_list.pop(1)
+   print("Account Deleted!")
+   print(f"Current Accounts: ${account_list}")
+  
 
 def change_email(username, new_email):
   #for loop is used to find dictionar ycorresponding to specified username
@@ -117,11 +135,23 @@ def change_email(username, new_email):
   else:
         print("Username not found.")
 
-def change_password():
-    print("password changed")
+def change_password(username, new_password):
+     for account in account_list:
+        if account["username"] == username:
+            account["password"] = new_password
+            print(f"Password has been updated successfully to {new_password}")
+            break
+     else:
+        print("Password not found.")
 
-def change_user():
-    print("username changed")
+def change_user(username, new_username):
+    for account in account_list:
+        if account["username"] == username:
+            account["username"] = new_username
+            print(f"The Uuername has been updated successfully to {new_username}")
+            break
+    else:
+        print("Password not found.")
 
 action_option = int(input("Please enter an option from 1-4: "))
 
@@ -178,10 +208,20 @@ elif (action_option == 4):
             confirm_email = input("Incorrect, please use the correct email address: ")
         create_account(new_user, new_pass, email_address)
         print(f"Current Accounts: {account_list}")
+        deletion = int(input("Do you want to delete this account? 1 for yes, 2 for no "))
+        if (deletion == 1):
+            delete_account(new_user, account_number, PIN_number)
+        elif (deletion == 2):
+            print("Okay, thank you for using SwiftBank!")
+
+        
     
     elif (admin_option == 2):
         print("Notice: You are not allowed to delete your default account, which only account number and PIN are only required.")
         delete_account()
+        print("")
+        print("Run program again to start over.")
+        exit()
    
     #modify account information
     elif (admin_option == 3):
@@ -217,10 +257,12 @@ elif (action_option == 4):
             change_email(account_to_modify, new_email)
         
         elif (modify_option == 2):
-            change_password()
+            new_password = input("Please enter your changed password: ")
+            change_password(account_to_modify, new_password)
 
         elif(modify_option == 3):
-            change_user()
+            new_user = input("Please enter your changed username: ")
+            change_user(account_to_modify, new_user)
 
 
         
