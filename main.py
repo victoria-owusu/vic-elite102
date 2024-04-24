@@ -13,6 +13,8 @@ testQuery = ("SELECT * FROM transactions")
 
 
 # welcome user
+account_balance = 400
+print("")
 print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number to get started.")
 print("")
 
@@ -51,9 +53,10 @@ def display_options():
 display_options()
 
 # add deposit function
-def make_deposit(amount, method):
+def make_deposit(amount, method, balance):
    
     if (deposit_method == 1):
+        print("***************")
         print("Bank Transfer: ")
         confirm_account = input("Please confirm your account number to deposit funds: ")
         routing_number = input("Please confirm the routing number of the bank of the transfer:  ")
@@ -78,34 +81,42 @@ def make_deposit(amount, method):
 
         # Commit the transaction
     connection.commit()
-        
+
+    balance = account_balance
+    balance = balance + deposit_amount
+    print(f"Your current account balance is: ${balance}")
     print("Transaction data added successfully!")
+    print("")
     
    
     
     
 
 #make withdrawal function
-def make_withdrawal(amount, method):
+def make_withdrawal(amount, method, balance):
      
       #credit or debit card
       if (withdrawal_method == 1):
+        print("")
         debit_or_credit = input("Please enter type of card (debit or credit): ")
         card_number = int(input("Please enter card number: "))
         cardholder_name = input("Please enter the full name of the cardholder: ")
-        expiration_date = input("Please enter the expiration date")
+        expiration_date = input("Please enter the expiration date: ")
         cvc = input("Please enter the CVV/CVC: ")
-        print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through ${debit_or_credit} card!")
+        print("")
+        print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through {debit_or_credit} card!")
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Credit/Debit Withdrawal', 'Completed', 'Credit/Debit Card')
        
         #bank transfer
       elif (withdrawal_method == 2): 
+        print("")
         bank_name = input("Please enter the name of the bank: ")
         recipient_holder_name = input("Please enter the account recipient's full name: ")
         recipient_account_number = input("Please enter the recipient's account number: ")
         recipient_routing_number = input("Please enter the recipient's routing number: ")
         transfer_reference = input("Please enter any additional info for the transfer: ")
+        print("")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through bank transfer to ${recipient_holder_name}!")
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Bank Transfer Withdrawal', 'Completed', 'Bank Transfer')
@@ -113,11 +124,13 @@ def make_withdrawal(amount, method):
         
         #mobile wallet
       elif (withdrawal_method == 3):
+        print("")
         mobile_wallet_provider = input("Please enter the mobile wallet provider you'll be using: ")
         user_id = input("Please enter your user id: ")
         phone_number = input("Please enter your phone number (XXX-XXX-XXXX): ")
         mobile_wallet_password = input("Please enter your password used for mobile wallet: ")
         mobile_wallet_note = input("Please enter any additional notes for this withdrawal: ")
+        print("")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through your mobile wallet!")
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Mobile Wallet Withdrawal', 'Completed', 'Mobile Wallet')
@@ -126,8 +139,12 @@ def make_withdrawal(amount, method):
 
         # Commit the transaction
       connection.commit()
-        
+
+      balance = account_balance
+      balance = balance - withdrawal_amount 
+      print(f"Your current account balance is: ${balance}") 
       print("Transaction data added successfully!")
+      print("")
 
 def create_account(user, password, email):
     # everytime account is created
@@ -190,8 +207,10 @@ action_option = int(input("Please enter an option from 1-4: "))
 
 #Check balance, print tables
 if (action_option == 1):
-    account_balance = 400
+    print("")
+    
     print(f"Your current account balance is: ${account_balance}")
+    print("*************")
     print("Here is the list of your past transactions: ")
     cursor.execute(testQuery)
 
@@ -206,7 +225,7 @@ elif (action_option == 2):
     print("")
     print("Please choose an option from 1-2 ")
     deposit_method = int(input("Please choose a deposit method: "))
-    make_deposit(deposit_amount, deposit_method)
+    make_deposit(deposit_amount, deposit_method, account_balance)
     print("Here is the list of your past transactions: ")
     cursor.execute(testQuery)
 
@@ -219,14 +238,14 @@ elif (action_option == 2):
    
 #make a withdrawal
 elif (action_option == 3):
-    print("Do a withdraw")
+    
     print("")
     withdrawal_amount = int(input("Please enter the amount you would like to withdrawal: "))
     print("1. Credit/Debit Card")
     print("2. Bank Transfer")
     print("3. Mobile Wallets (Apple Pay, Google Pay, Samsung Pay)")
     withdrawal_method = int(input("Please choose a withdrawal method from 1-3: "))
-    make_withdrawal(withdrawal_amount, withdrawal_method)
+    make_withdrawal(withdrawal_amount, withdrawal_method, account_balance)
     
 
 # account settings
@@ -238,6 +257,7 @@ elif (action_option == 4):
     print("2. Close account")
     print("3. Modify an account")
     print("4. Exit SwiftBank")
+    print("")
     admin_option = int(input("Please enter an option from 1-3: "))
 
 #edit account
@@ -252,7 +272,9 @@ elif (action_option == 4):
         while email_address != confirm_email:
             confirm_email = input("Incorrect, please use the correct email address: ")
         create_account(new_user, new_pass, email_address)
+        print("")
         print(f"Current Accounts: {account_list}")
+        print("******************")
         deletion = int(input("Do you want to delete this account? 1 for yes, 2 for no "))
         if (deletion == 1):
             delete_account(new_user, account_number, PIN_number)
@@ -271,6 +293,7 @@ elif (action_option == 4):
     #modify account information
     elif (admin_option == 3):
         print(f"Current Accounts: {account_list}")
+        print("")
         account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
          # Check if the entered username exists in any of the dictionaries in account_list
         def verify_account_existence(account):
@@ -291,6 +314,7 @@ elif (action_option == 4):
             while not verify_account_existence(account_to_modify):
                 account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
                 verify_account_existence(account_to_modify)
+            print("")
             print("1. Change email")
             print("2. Change password")
             print("3. Change username")
