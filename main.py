@@ -1,14 +1,16 @@
-#import mysql.connector
+import mysql.connector
 import tkinter
-import unittest
+
 
  
 
-#connection = mysql.connector.connect(user = 'root', database ='bank', password = 'Katyisd#1')
+connection = mysql.connector.connect(user = 'root', database = 'bank', password = 'Katyisd#1')
+cursor = connection.cursor()
 
- 
+testQuery = ("SELECT * FROM transactions")
 
-#connection.close()
+
+
 
 # welcome user
 print("Hello, thank you for using SwiftBank! To see or adjust your bank information, please enter your account number and PIN number to get started.")
@@ -50,14 +52,18 @@ display_options()
 
 # add deposit function
 def make_deposit(amount, method):
+   
     if (deposit_method == 1):
         print("Bank Transfer: ")
         confirm_account = input("Please confirm your account number to deposit funds: ")
         routing_number = input("Please confirm the routing number of the bank of the transfer:  ")
         transfer_description = input("Please enter any additional notes for the transfer: ")
         print(f"Deposit complete! You have deposited ${deposit_amount} through bank transfer!")
-        # display_options()
-        # TO-DO: add function to display transactions
+        addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
+        transaction_data = ('Deposit', deposit_amount, '2024-04-24', 'Bank Transfer 1', 'Completed', 'Bank Transfer')
+        
+        
+
     elif (deposit_method == 2):
         print("Wire Transfer: ")
         confirm_account = input("Please confirm your account number to deposit funds: ")
@@ -65,6 +71,19 @@ def make_deposit(amount, method):
         routing_number = input("Enter your bank's routing number: ")
         print("")
         print(f"Deposit complete! You have deposited ${deposit_amount} through wire transfer!")
+        addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
+        transaction_data = ('Deposit', deposit_amount, '2024-04-24', 'Wire Transfer 1', 'Completed', 'Wire Transfer')
+    
+    cursor.execute(addData, transaction_data)
+
+        # Commit the transaction
+    connection.commit()
+        
+    print("Transaction data added successfully!")
+    
+   
+    
+    
 
 #make withdrawal function
 def make_withdrawal(amount, method):
@@ -77,6 +96,8 @@ def make_withdrawal(amount, method):
         expiration_date = input("Please enter the expiration date")
         cvc = input("Please enter the CVV/CVC: ")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through ${debit_or_credit} card!")
+        addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
+        transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Credit/Debit Withdrawal', 'Completed', 'Credit/Debit Card')
        
         #bank transfer
       elif (withdrawal_method == 2): 
@@ -86,6 +107,9 @@ def make_withdrawal(amount, method):
         recipient_routing_number = input("Please enter the recipient's routing number: ")
         transfer_reference = input("Please enter any additional info for the transfer: ")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through bank transfer to ${recipient_holder_name}!")
+        addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
+        transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Bank Transfer Withdrawal', 'Completed', 'Bank Transfer')
+
         
         #mobile wallet
       elif (withdrawal_method == 3):
@@ -95,6 +119,15 @@ def make_withdrawal(amount, method):
         mobile_wallet_password = input("Please enter your password used for mobile wallet: ")
         mobile_wallet_note = input("Please enter any additional notes for this withdrawal: ")
         print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through your mobile wallet!")
+        addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
+        transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Mobile Wallet Withdrawal', 'Completed', 'Mobile Wallet')
+      
+      cursor.execute(addData, transaction_data)
+
+        # Commit the transaction
+      connection.commit()
+        
+      print("Transaction data added successfully!")
 
 def create_account(user, password, email):
     # everytime account is created
@@ -159,6 +192,11 @@ action_option = int(input("Please enter an option from 1-4: "))
 if (action_option == 1):
     account_balance = 400
     print(f"Your current account balance is: ${account_balance}")
+    print("Here is the list of your past transactions: ")
+    cursor.execute(testQuery)
+
+    for item in cursor:
+        print(item)
 
 #deposit in account
 elif (action_option == 2):
@@ -169,6 +207,13 @@ elif (action_option == 2):
     print("Please choose an option from 1-2 ")
     deposit_method = int(input("Please choose a deposit method: "))
     make_deposit(deposit_amount, deposit_method)
+    print("Here is the list of your past transactions: ")
+    cursor.execute(testQuery)
+
+    for item in cursor:
+        print(item)
+   
+    
    
     
    
@@ -283,3 +328,7 @@ elif (action_option == 5):
 else: 
     print("Invalid response response, please try again.")
     action_option = int(input("Please enter an option from 1-4: "))
+
+cursor.close()
+
+connection.close()
