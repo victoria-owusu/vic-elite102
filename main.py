@@ -1,5 +1,4 @@
 import mysql.connector
-import unittest
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
@@ -7,12 +6,13 @@ from rich.text import Text
 #create console object to change colors, etc.
 console = Console()
  
-
+# add sql connector, establish connection
 connection = mysql.connector.connect(user = 'root', database = 'bank', password = 'Katyisd#1')
 cursor = connection.cursor()
 
 testQuery = ("SELECT * FROM transactions")
 
+# create transactions table to list transactions
 transactions_table = Table(show_header=True, header_style="")
 transactions_table.add_column("TransactionType", style="bold", header_style="rosy_brown")
 transactions_table.add_column("Amount", style="bold", header_style="rosy_brown")
@@ -27,6 +27,7 @@ rows = cursor.fetchall()
 change_menu = Table(show_header=True, header_style = "")
 change_menu.add_column("Number", style="italic white", header_style="bold")
 change_menu.add_column("Option", style="blue", header_style="bold")
+
 
 change_menu.add_row("1", "Change email")
 change_menu.add_row("2", "Change password")
@@ -47,6 +48,7 @@ while len(account_number) != 10:
     console.print("\nInvalid, try again. Please enter your 10-digit account number: ", style="italic red")
     account_number = input("")
 
+#validate pin number
 console.print("\nPlease enter your [underline][italic]4-digit[/underline][/italic] PIN number: ")
 PIN_number = input("")
 while len(PIN_number) != 4:
@@ -71,11 +73,12 @@ account_table.add_column("Account Name", style="bold", header_style="light_slate
 console.print("Login Successful!", style="italic green")
 print("")
 print("")
+#welcome to swiftbank
 print("***************")
 console.print("Welcome to SwiftBank! Please select from the action options below:", style=" italic purple")
 print("")
 
-
+#displayed main-menu on a table for user to choose where they want to go
 def display_options():
     main_menu = Table(show_header=True, header_style = "")
     main_menu.add_column("Number", style="italic white", header_style="bold")
@@ -94,24 +97,30 @@ display_options()
 def make_deposit(amount, method, balance):
    
     if (deposit_method == 1):
+        #allow user to choose bank transfer
         print("***************")
         console.print("\nBank Transfer: ", style="italic violet")
         confirm_account = input("Please confirm your account number to deposit funds: ")
         routing_number = input("Please confirm the routing number of the bank of the transfer:  ")
         transfer_description = input("Please enter any additional notes for the transfer: ")
         console.print(f"\nDeposit complete! You have deposited ${deposit_amount} through bank transfer!", style="italic green")
+        
+        #add deposit into transactions data
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Deposit', deposit_amount, '2024-04-24', 'Bank Transfer 1', 'Completed', 'Bank Transfer')
         
         
 
     elif (deposit_method == 2):
+        #allow user to choose wire transfer
         console.print("\nWire Transfer: ", style="italic violet")
         confirm_account = input("Please confirm your account number to deposit funds: ")
         bank_name = input("Please enter your bank's name: ")
         routing_number = input("Enter your bank's routing number: ")
         print("")
         console.print(f"Deposit complete! You have deposited ${deposit_amount} through wire transfer!", style="italic green")
+        
+        #add deposit into transactions data
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Deposit', deposit_amount, '2024-04-24', 'Wire Transfer 1', 'Completed', 'Wire Transfer')
     
@@ -120,6 +129,7 @@ def make_deposit(amount, method, balance):
         # Commit the transaction
     connection.commit()
 
+    #add deposit to balance
     balance = account_balance
     balance = balance + deposit_amount
     print(f"Your current account balance is: ${balance}")
@@ -143,6 +153,8 @@ def make_withdrawal(amount, method, balance):
         cvc = input("Please enter the CVV/CVC: ")
         print("")
         console.print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through {debit_or_credit} card!", style="italic green")
+       
+        # add withdrawal transaction data
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Credit/Debit Withdrawal', 'Completed', 'Credit/Debit Card')
        
@@ -156,6 +168,8 @@ def make_withdrawal(amount, method, balance):
         transfer_reference = input("Please enter any additional info for the transfer: ")
         print("")
         console.print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through bank transfer to ${recipient_holder_name}!", style="italic green")
+       
+        # add withdrawal transaction data
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Bank Transfer Withdrawal', 'Completed', 'Bank Transfer')
 
@@ -170,6 +184,8 @@ def make_withdrawal(amount, method, balance):
         mobile_wallet_note = input("Please enter any additional notes for this withdrawal: ")
         print("")
         console.print(f"Withdrawal complete! You have withdrew ${withdrawal_amount} through your mobile wallet!", style="italic green")
+        
+        #add withdrawal transaction data
         addData = ("INSERT INTO transactions (TransactionType, Amount, TransactionDate, TransactionName, Status, PaymentMethod) VALUES (%s, %s, %s, %s, %s, %s)")
         transaction_data = ('Withdrawal', withdrawal_amount, '2024-04-24', 'Mobile Wallet Withdrawal', 'Completed', 'Mobile Wallet')
       
@@ -178,6 +194,7 @@ def make_withdrawal(amount, method, balance):
         # Commit the transaction
       connection.commit()
 
+      # add withdrawal into balance
       balance = account_balance
       balance = balance - withdrawal_amount 
       print(f"Your current account balance is: ${balance}") 
@@ -187,27 +204,33 @@ def make_withdrawal(amount, method, balance):
 def create_account(user, password, email):
     # everytime account is created
     new_account = {"username": user, "email": email, "password": password}
+    #add account into list
     account_list.append(new_account)
     console.print(f"Welcome {user}, your account has been created!", style="italic green")
+    #display current accounts
     for data in account_list:
             account_table.add_row(
-                str(data.get("Name", "")),
-                str(data.get("Age", "")),
-                str(data.get("Location", "")),
-                str(data.get("Occupation", ""))
+                str(data.get("username", "")),
+                str(data.get("email", "")),
+                str(data.get("password", "")),
             )
 
           
 def delete_account(account, acc_number, pin):
+   #warning to user
    if len(account_list) == 1:
        console.print("You cannot delete the **default** account. Only additionally made accounts can be deleted.", style="italic red")
        return
+   
+   # deleting accounts
    acccount =  input("What account do you want to delete besides default? ")
    for account in account_list:
         if account["username"] == account:
             console.print(f"Starting process to delete ${account}.", style="italic")
    acc_number = account_number
    pin = PIN_number
+
+   #validation
    confirm_acc_number = input("Please confirm your account number: ")
    while confirm_acc_number != account_number:
        console.print("Please try again, incorrect account number: ", style="italic red")
@@ -219,12 +242,12 @@ def delete_account(account, acc_number, pin):
    print("Deleting account....")
    account_list.pop(1)
    print("Account Deleted!")
+   #show account list
    for data in account_list:
             account_table.add_row(
-                str(data.get("Name", "")),
-                str(data.get("Age", "")),
-                str(data.get("Location", "")),
-                str(data.get("Occupation", ""))
+                str(data.get("username", "")),
+                str(data.get("password", "")),
+                str(data.get("email", "")),
             )
    console.print(f"\nCurrent Accounts: ", style="bold purple")
    console.print(account_list)
@@ -240,9 +263,12 @@ def change_email(username, new_email):
             console.print(f"Email address has been updated successfully to {new_email}", style="italic green")
             break
   else:
+        #notify user username is not found
         console.print("Username not found.", style="italic red")
 
+
 def change_password(username, new_password):
+       #for loop is used to find dictionar ycorresponding to specified username
      for account in account_list:
         if account["username"] == username:
             account["password"] = new_password
@@ -252,6 +278,7 @@ def change_password(username, new_password):
         console.print("Password not found.", style="italic red")
 
 def change_user(username, new_username):
+      #for loop is used to find dictionar ycorresponding to specified username
     for account in account_list:
         if account["username"] == username:
             account["username"] = new_username
@@ -260,6 +287,7 @@ def change_user(username, new_username):
     else:
         console.print("Password not found.", style="italic red")
 
+#allow user to choose option from main menu
 console.print("\nPlease enter an option from 1-5: ", style="blue")
 action_option = int(input(""))
 
@@ -267,10 +295,14 @@ action_option = int(input(""))
 if (action_option == 1):
     print("")
     
+    #display current account balance
     console.print(f"[underline]Your current account balance is:[/underline] ${account_balance}",style="dim")
     print("\n*************")
+    
+    #display past transactions
     console.print("Here is the list of your past transactions: ", style="bold dark_magenta")
     
+    #print transactions table
     for row in rows:
         transactions_table.add_row(str(row[0]), str(row[1]), str(row[2]), str(row[3]), str(row[4]), str(row[5]))
     console.print(transactions_table)
@@ -279,6 +311,7 @@ if (action_option == 1):
 elif (action_option == 2):
     console.print("How much do you want to deposit?", style="bold")
 
+    #display deposit options in a table
     deposit_amount = int(input(""))
     deposit_menu = Table(show_header=True, header_style = "")
     deposit_menu.add_column("Number", style="italic white", header_style="bold")
@@ -291,7 +324,11 @@ elif (action_option == 2):
     console.print(deposit_menu)
     print("Please choose an option from 1-2 ")
     deposit_method = int(input("Please choose a deposit method: "))
+    
+    #user makes deposit
     make_deposit(deposit_amount, deposit_method, account_balance)
+    
+    #print transactions table
     print("Here is the list of your past transactions: ")
     for row in rows:
         transactions_table.add_row(str(row[0]), str(row[1]), str(row[2]), str(row[3]), str(row[4]), str(row[5]))
@@ -303,11 +340,13 @@ elif (action_option == 2):
    
 #make a withdrawal
 elif (action_option == 3):
-    
+    # input withdrawal amount
     print("")
     console.print("Please enter the amount you would like to withdrawal:", style="bold")
     withdrawal_amount = int(input(" "))
 
+
+    #display withdrawal options with table
     withdrawal_menu = Table(show_header=True, header_style="")
     withdrawal_menu.add_column("Number", style="italic white", header_style="bold")
     withdrawal_menu.add_column("Option", style="blue", header_style="bold")
@@ -330,6 +369,7 @@ elif (action_option == 4):
     console.print("Account settings: choose one of the following options: ", style="bold plum4")
     account_settings = Table(show_header=True, header_style="")
 
+    #display account setting options with table
     account_settings.add_column("Number", style="italic white", header_style="bold")
     account_settings.add_column("Option", style="blue", header_style="bold")
 
@@ -359,16 +399,17 @@ elif (action_option == 4):
         create_account(new_user, new_pass, email_address)
         print("")
 
+        #display current accounts
         for data in account_list:
             account_table.add_row(
-                str(data.get("Name", "")),
-                str(data.get("Age", "")),
-                str(data.get("Location", "")),
-                str(data.get("Occupation", ""))
+                str(data.get("username", "")),
+                str(data.get("password", "")),
+                str(data.get("email", "")),
             )
         console.print(f"\nCurrent Accounts: ", style="bold purple")
         console.print(account_list)
 
+        #allow user to delete new account
         print("******************")
         console.print("\nDo you want to delete this account? 1 for yes, 2 for no ", style="bold red")
         deletion = int(input(""))
@@ -380,6 +421,7 @@ elif (action_option == 4):
         
     
     elif (admin_option == 2):
+        #restrict user from deleting default account
         console.print("\nNotice: You are not allowed to delete your default account, which only account number and PIN are only required.", style="bold red")
         delete_account('default', account_number, PIN_number)
         print("")
@@ -390,11 +432,12 @@ elif (action_option == 4):
     elif (admin_option == 3):
         for data in account_list:
             account_table.add_row(
-                str(data.get("Name", "")),
-                str(data.get("Age", "")),
-                str(data.get("Location", "")),
-                str(data.get("Occupation", ""))
+                str(data.get("username", "")),
+                str(data.get("password", "")),
+                str(data.get("email", "")),
             )
+
+        #display current 
         console.print(f"\nCurrent Accounts: ", style="bold purple")
         print("")
         account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
@@ -414,6 +457,7 @@ elif (action_option == 4):
             console.print(change_menu)
         else:
             console.print("\nInvalid account, try again.", style="italic red")
+            
             while not verify_account_existence(account_to_modify):
                 account_to_modify = input("What account would you like to change? Please enter the username of an account: ")
                 verify_account_existence(account_to_modify)
@@ -422,14 +466,18 @@ elif (action_option == 4):
         
         #allow user to choose waht they would like to change
         modify_option = int(input("Please choose from 1-3: "))
+
+        #change email
         if (modify_option == 1):
             new_email = input("Please enter your changed email address: ")
             change_email(account_to_modify, new_email)
         
+        #change password
         elif (modify_option == 2):
             new_password = input("Please enter your changed password: ")
             change_password(account_to_modify, new_password)
 
+        #change username
         elif(modify_option == 3):
             new_user = input("Please enter your changed username: ")
             change_user(account_to_modify, new_user)
@@ -438,7 +486,7 @@ elif (action_option == 4):
         
         
         
-
+    #thank user
     elif (admin_option == 4):
         console.print("Thank you for using SwiftBank!", style="italic green")
         exit()
@@ -446,6 +494,7 @@ elif (action_option == 4):
         console.print("Invalid response response, please try again.", style="italic red")
         admin_option = int(input("\nPlease enter an option from 1-3: "))
 
+#thank user, immediately exit program
 elif (action_option == 5):
     console.print("Thank you for using SwiftBank!", style="italic green")
     exit()
@@ -454,6 +503,7 @@ else:
     console.print("Invalid response response, please try again.", style="italic red")
     action_option = int(input("Please enter an option from 1-4: "))
 
+#close connection with sqlconnector
 cursor.close()
 
 connection.close()
