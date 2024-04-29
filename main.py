@@ -416,7 +416,7 @@ elif (action_option == 4):
         if (deletion == 1):
             delete_account(new_user, account_number, PIN_number)
         elif (deletion == 2):
-            print("Okay, thank you for using SwiftBank!", style="bold purple")
+            console.print("Okay, thank you for using SwiftBank!", style="bold purple")
 
         
     
