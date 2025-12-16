@@ -6,7 +6,7 @@ This project demonstrates backend logic, database integration, and user-focused 
 
 **✨ Features**
 
-** User Account Management**
+**User Account Management**
 - Create new bank accounts
 
 - Securely store user information in a MySQL database
